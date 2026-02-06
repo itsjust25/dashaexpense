@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Trash2, Plus, Save, X, Circle } from "lucide-react"
+import { Trash2, Plus, Save, X, Circle, AlertTriangle, RefreshCcw, Edit2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const PRESET_COLORS = [
@@ -17,7 +17,7 @@ const PRESET_COLORS = [
 ]
 
 export function CategoryManager() {
-    const { categories, addCategory, updateCategory, removeCategory, transactions } = useBudget()
+    const { categories, addCategory, updateCategory, removeCategory, transactions, resetData } = useBudget()
     const [isAdding, setIsAdding] = useState(false)
     const [editingId, setEditingId] = useState<string | null>(null)
 
@@ -65,6 +65,17 @@ export function CategoryManager() {
         }
         if (confirm("Are you sure you want to delete this category?")) {
             removeCategory(id)
+        }
+    }
+
+    const handleReset = () => {
+        const confirm1 = confirm("⚠️ DANGER: This will delete ALL transactions and reset categories to default. This action cannot be undone.")
+        if (confirm1) {
+            const confirm2 = confirm("Are you ABSOLUTELY sure you want to wipe all your data?")
+            if (confirm2) {
+                resetData()
+                alert("System has been reset.")
+            }
         }
     }
 
@@ -152,7 +163,7 @@ export function CategoryManager() {
                             </div>
                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartEdit(cat)}>
-                                    <Save className="h-4 w-4" /> {/* Reusing Save icon as Edit for now, actually Edit2 is better */}
+                                    <Edit2 className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleDelete(cat.id)}>
                                     <Trash2 className="h-4 w-4" />
@@ -161,6 +172,32 @@ export function CategoryManager() {
                         </CardContent>
                     </Card>
                 ))}
+            </div>
+
+            {/* Danger Zone */}
+            <div className="pt-10 border-t border-destructive/20 mt-10">
+                <div className="glass-card border-destructive/30 rounded-2xl p-6 bg-destructive/5">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-destructive font-bold text-lg">
+                                <AlertTriangle className="h-5 w-5" />
+                                Danger Zone
+                            </div>
+                            <p className="text-sm text-muted-foreground max-w-md">
+                                Resetting the system will permanently delete all your transaction records and restore categories to default settings.
+                                <span className="font-bold underline ml-1">This cannot be undone.</span>
+                            </p>
+                        </div>
+                        <Button
+                            variant="destructive"
+                            className="h-12 px-6 rounded-xl font-bold gap-2 shadow-lg shadow-destructive/20"
+                            onClick={handleReset}
+                        >
+                            <RefreshCcw className="h-4 w-4" />
+                            Reset System
+                        </Button>
+                    </div>
+                </div>
             </div>
         </div>
     )
