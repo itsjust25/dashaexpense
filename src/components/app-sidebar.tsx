@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LayoutDashboard, CalendarDays, PieChart, Settings, PlusCircle } from "lucide-react"
+import { LayoutDashboard, CalendarDays, PieChart, Settings, Calculator } from "lucide-react"
 import { useState } from "react"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,7 +15,7 @@ export function AppSidebar({ className, activeView, setActiveView, onQuickAdd }:
     const navItems = [
         { id: "dashboard", label: "Home", icon: LayoutDashboard },
         { id: "calendar", label: "Calendar", icon: CalendarDays },
-        { id: "add", label: "Add", icon: PlusCircle, isAction: true }, // Special middle button
+        { id: "add", label: "Calc", icon: Calculator, isAction: true }, // Calculator button
         { id: "reports", label: "Reports", icon: PieChart },
         { id: "categories", label: "Settings", icon: Settings },
     ]
@@ -24,13 +24,13 @@ export function AppSidebar({ className, activeView, setActiveView, onQuickAdd }:
         <>
             {/* DESKTOP: Sidebar Container */}
             <div className={cn(
-                "hidden md:block w-64 bg-card/50 backdrop-blur-xl border-r z-50",
+                "hidden md:block w-64 bg-card/50 backdrop-blur-xl border-r z-50 relative flex-shrink-0",
                 className
             )}>
                 <div className="h-full flex flex-col">
                     <div className="p-8 flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20">D</div>
-                        <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">Dasha</h1>
+                        <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">Dasha Budget</h1>
                     </div>
 
                     <div className="flex-1 px-4 py-2 space-y-2">
@@ -59,7 +59,7 @@ export function AppSidebar({ className, activeView, setActiveView, onQuickAdd }:
             </div>
 
             {/* MOBILE: Bottom Navigation Bar */}
-            <div className="glass-nav fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
+            <div className="glass-nav fixed bottom-0 left-0 right-0 z-[100] md:hidden pb-safe pointer-events-auto">
                 <div className="flex items-center justify-around p-2 h-16">
                     {navItems.map((item) => {
                         const isActive = activeView === item.id;
@@ -71,7 +71,7 @@ export function AppSidebar({ className, activeView, setActiveView, onQuickAdd }:
                                     onClick={() => onQuickAdd ? onQuickAdd() : setActiveView("dashboard")}
                                     className="relative -top-5 bg-gradient-primary rounded-full p-4 shadow-xl shadow-primary/30 text-white transition-transform active:scale-95"
                                 >
-                                    <PlusCircle className="h-6 w-6" />
+                                    <Calculator className="h-6 w-6" />
                                 </button>
                             )
                         }

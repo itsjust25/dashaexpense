@@ -26,7 +26,7 @@ export function BudgetSummary() {
                         ₱{currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </div>
                     <div className="flex items-center gap-2 mt-4">
-                        <div className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
+                        <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
                         <p className="text-xs font-medium opacity-80 uppercase tracking-widest">
                             Available to spend
                         </p>

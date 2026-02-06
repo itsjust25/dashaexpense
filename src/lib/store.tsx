@@ -23,12 +23,16 @@ export type Category = {
     icon?: string // Optional icon identifier
 }
 
-
+export type CalendarNote = {
+    id: string
+    date: string // ISO date string
+    note: string
+}
 
 type BudgetContextType = {
     transactions: Transaction[]
     categories: Category[]
-
+    calendarNotes: CalendarNote[]
 
     // Actions
     addTransaction: (tx: Omit<Transaction, "id">) => void
@@ -38,7 +42,10 @@ type BudgetContextType = {
     updateCategory: (id: string, updates: Partial<Category>) => void
     removeCategory: (id: string) => void
 
-
+    addCalendarNote: (note: Omit<CalendarNote, "id">) => void
+    updateCalendarNote: (id: string, note: string) => void
+    removeCalendarNote: (id: string) => void
+    getCalendarNote: (date: string) => CalendarNote | undefined
 
     // Derived State
     currentBalance: number
@@ -65,6 +72,7 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
     // State
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES)
+    const [calendarNotes, setCalendarNotes] = useState<CalendarNote[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
 
     // Load from LocalStorage
@@ -76,6 +84,7 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
                 const data = JSON.parse(saved)
                 setTransactions(data.transactions || [])
                 setCategories(data.categories || DEFAULT_CATEGORIES)
+                setCalendarNotes(data.calendarNotes || [])
             } catch (e) {
                 console.error("Failed to load budget data", e)
             }
@@ -89,9 +98,9 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
     // Save to LocalStorage
     useEffect(() => {
         if (isLoaded) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ transactions, categories }))
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ transactions, categories, calendarNotes }))
         }
-    }, [transactions, categories, isLoaded])
+    }, [isLoaded, transactions, categories, calendarNotes])
 
     // Actions
     const addTransaction = (tx: Omit<Transaction, "id">) => {
@@ -114,13 +123,34 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
         setCategories((prev) => prev.filter((c) => c.id !== id))
     }
 
+    // Calendar Notes Actions
+    const addCalendarNote = (note: Omit<CalendarNote, "id">) => {
+        const existing = calendarNotes.find(n => n.date === note.date)
+        if (existing) {
+            // Update existing note
+            setCalendarNotes((prev) => prev.map(n => n.date === note.date ? { ...n, note: note.note } : n))
+        } else {
+            // Add new note
+            setCalendarNotes((prev) => [...prev, { ...note, id: uuidv4() }])
+        }
+    }
 
+    const updateCalendarNote = (id: string, note: string) => {
+        setCalendarNotes((prev) => prev.map(n => n.id === id ? { ...n, note } : n))
+    }
 
+    const removeCalendarNote = (id: string) => {
+        setCalendarNotes((prev) => prev.filter((n) => n.id !== id))
+    }
 
+    const getCalendarNote = (date: string) => {
+        return calendarNotes.find(n => n.date === date)
+    }
 
     const resetData = () => {
         setTransactions([]);
         setCategories(DEFAULT_CATEGORIES);
+        setCalendarNotes([]);
     }
 
     // Derived Calculations
@@ -145,11 +175,16 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
             value={{
                 transactions,
                 categories,
+                calendarNotes,
                 addTransaction,
                 removeTransaction,
                 addCategory,
                 updateCategory,
                 removeCategory,
+                addCalendarNote,
+                updateCalendarNote,
+                removeCalendarNote,
+                getCalendarNote,
                 currentBalance,
                 totalIncome,
                 totalExpenses,

@@ -14,45 +14,58 @@ import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { SpendingTrend } from "./spending-trend"
+import { Calculator } from "./calculator"
+import { useTheme } from "./theme-provider"
+import { Sun, Moon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function DashboardLayout() {
     const [activeView, setActiveView] = useState("dashboard")
+    const [isCalculatorOpen, setIsCalculatorOpen] = useState(false)
     const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-background font-sans text-foreground md:pl-0">
-            <AppSidebar activeView={activeView} setActiveView={setActiveView} onQuickAdd={() => setIsQuickAddOpen(true)} />
+            <AppSidebar
+                activeView={activeView}
+                setActiveView={setActiveView}
+                onQuickAdd={() => setIsCalculatorOpen(true)}
+            />
 
-            <main className="flex-1 flex flex-col h-full relative w-full">
+            <main className="flex-1 flex flex-col h-full relative min-w-0">
                 {/* Mobile Header - Glassmorphic */}
-                <header className="glass absolute top-0 left-0 right-0 h-16 z-40 flex items-center justify-center md:hidden px-4">
+                <header className="glass fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between md:hidden px-4">
+                    <div className="w-10" /> {/* Spacer */}
                     <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">
-                        {activeView === "dashboard" && "Dashboard"}
+                        {activeView === "dashboard" && "Dasha Budget"}
                         {activeView === "calendar" && "Calendar"}
                         {activeView === "reports" && "Reports"}
                         {activeView === "categories" && "Settings"}
                     </h1>
+                    <ThemeToggle />
                 </header>
 
                 {/* Desktop Header */}
-                <header className="hidden md:flex flex-none h-20 items-center justify-between px-8 border-b bg-card/30 backdrop-blur-sm z-10">
+                <header className="hidden md:flex flex-none h-20 items-center justify-between px-8 border-b bg-card/30 backdrop-blur-sm z-50">
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight">
-                            {activeView === "dashboard" && "Overview"}
+                            {activeView === "dashboard" && "Dasha Budget"}
                             {activeView === "calendar" && "Calendar"}
                             {activeView === "reports" && "Analytics"}
                             {activeView === "categories" && "Categories"}
                         </h2>
                         <p className="text-sm text-muted-foreground">Welcome back, Justin</p>
                     </div>
-                    <div className="text-sm font-medium text-muted-foreground bg-primary/5 px-4 py-2 rounded-full">
-                        {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+                    <div className="flex items-center gap-4">
+                        <div className="text-sm font-medium text-muted-foreground bg-primary/5 px-4 py-2 rounded-full">
+                            {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+                        </div>
+                        <ThemeToggle />
                     </div>
                 </header>
 
                 {/* Main Content Area */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden pt-20 pb-24 md:pt-6 md:pb-6 px-4 md:px-8 scroll-smooth no-scrollbar">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden pt-20 pb-24 md:pt-6 md:pb-6 px-4 md:px-8 scroll-smooth no-scrollbar relative z-0 pointer-events-auto">
                     <div className="max-w-7xl mx-auto h-full space-y-6">
 
                         {activeView === "dashboard" && (
@@ -65,7 +78,7 @@ export function DashboardLayout() {
                                             <Card className="glass-card border-none shadow-xl overflow-hidden group">
                                                 <CardHeader className="pb-2">
                                                     <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                                                         Last 7 Days Spending
                                                     </CardTitle>
                                                 </CardHeader>
@@ -103,6 +116,14 @@ export function DashboardLayout() {
                                 <div className="lg:col-span-4 space-y-6">
                                     <Card className="glass-card border-none shadow-xl sticky top-8">
                                         <CardHeader>
+                                            <CardTitle className="text-lg font-bold">Quick Add</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <AddTransactionForm />
+                                        </CardContent>
+                                    </Card>
+                                    <Card className="glass-card border-none shadow-xl">
+                                        <CardHeader>
                                             <CardTitle className="text-lg font-bold">Budgets</CardTitle>
                                         </CardHeader>
                                         <CardContent>
@@ -135,6 +156,17 @@ export function DashboardLayout() {
                 </div>
             </main>
 
+            <Dialog open={isCalculatorOpen} onOpenChange={setIsCalculatorOpen}>
+                <DialogContent className="sm:max-w-[425px] rounded-[2rem] p-0 overflow-hidden border-none glass-card">
+                    <DialogHeader className="p-6 pb-0">
+                        <DialogTitle className="text-xl font-black uppercase tracking-widest text-primary/60">Dasha Calc</DialogTitle>
+                    </DialogHeader>
+                    <div className="p-4 pt-2">
+                        <Calculator onDone={() => setIsCalculatorOpen(false)} />
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             <Dialog open={isQuickAddOpen} onOpenChange={setIsQuickAddOpen}>
                 <DialogContent className="sm:max-w-[425px] rounded-2xl">
                     <DialogHeader>
@@ -144,5 +176,14 @@ export function DashboardLayout() {
                 </DialogContent>
             </Dialog>
         </div>
+    )
+}
+
+function ThemeToggle() {
+    const { theme, toggleTheme } = useTheme()
+    return (
+        <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-xl hover:bg-primary/10">
+            {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+        </Button>
     )
 }

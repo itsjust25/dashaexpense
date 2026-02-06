@@ -112,7 +112,7 @@ export function BudgetProgress() {
                             </div>
 
                             {isOverBudget && (
-                                <div className="mt-2 text-[10px] text-red-500 flex items-center gap-1 font-bold animate-pulse">
+                                <div className="mt-2 text-[10px] text-red-500 flex items-center gap-1 font-bold">
                                     <AlertCircle className="h-3 w-3" />
                                     Over budget by ₱{(spent - limit).toLocaleString()}
                                 </div>
