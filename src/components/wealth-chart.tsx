@@ -40,6 +40,7 @@ export function WealthChart() {
                         ))}
                     </Pie>
                     <Tooltip
+                        // @ts-ignore
                         formatter={(value: number) => `₱${value.toLocaleString()}`}
                         contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
                     />
