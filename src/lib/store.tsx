@@ -23,9 +23,12 @@ export type Category = {
     icon?: string // Optional icon identifier
 }
 
+
+
 type BudgetContextType = {
     transactions: Transaction[]
     categories: Category[]
+
 
     // Actions
     addTransaction: (tx: Omit<Transaction, "id">) => void
@@ -34,6 +37,8 @@ type BudgetContextType = {
     addCategory: (cat: Omit<Category, "id">) => void
     updateCategory: (id: string, updates: Partial<Category>) => void
     removeCategory: (id: string) => void
+
+
 
     // Derived State
     currentBalance: number
@@ -47,11 +52,11 @@ type BudgetContextType = {
 const BudgetContext = createContext<BudgetContextType | undefined>(undefined)
 
 const DEFAULT_CATEGORIES: Category[] = [
-    { id: "1", name: "Food", budgetLimit: 5000, color: "#ef4444" }, // Red
-    { id: "2", name: "Transportation", budgetLimit: 3000, color: "#f97316" }, // Orange
-    { id: "3", name: "Allowance", budgetLimit: 2000, color: "#eab308" }, // Yellow
-    { id: "4", name: "Bills", budgetLimit: 10000, color: "#3b82f6" }, // Blue
-    { id: "5", name: "Shopping", budgetLimit: 2000, color: "#a855f7" }, // Purple
+    { id: "1", name: "Food", budgetLimit: 5000, color: "#ef4444", icon: "Utensils" },
+    { id: "2", name: "Transportation", budgetLimit: 3000, color: "#f97316", icon: "Car" },
+    { id: "3", name: "Allowance", budgetLimit: 2000, color: "#eab308", icon: "GraduationCap" },
+    { id: "4", name: "Bills", budgetLimit: 10000, color: "#3b82f6", icon: "Zap" },
+    { id: "5", name: "Shopping", budgetLimit: 2000, color: "#a855f7", icon: "ShoppingBag" },
 ]
 
 const STORAGE_KEY = "dasha-budget-v2"
@@ -108,6 +113,10 @@ export function BudgetProvider({ children }: { children: React.ReactNode }) {
     const removeCategory = (id: string) => {
         setCategories((prev) => prev.filter((c) => c.id !== id))
     }
+
+
+
+
 
     const resetData = () => {
         setTransactions([]);

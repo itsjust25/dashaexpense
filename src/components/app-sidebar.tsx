@@ -10,7 +10,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
     setActiveView: (view: string) => void
 }
 
-export function AppSidebar({ className, activeView, setActiveView }: SidebarProps) {
+export function AppSidebar({ className, activeView, setActiveView, onQuickAdd }: SidebarProps & { onQuickAdd?: () => void }) {
 
     const navItems = [
         { id: "dashboard", label: "Home", icon: LayoutDashboard },
@@ -68,7 +68,7 @@ export function AppSidebar({ className, activeView, setActiveView }: SidebarProp
                             return (
                                 <button
                                     key={item.id}
-                                    onClick={() => setActiveView("dashboard")} // Quick add usually on dashboard
+                                    onClick={() => onQuickAdd ? onQuickAdd() : setActiveView("dashboard")}
                                     className="relative -top-5 bg-gradient-primary rounded-full p-4 shadow-xl shadow-primary/30 text-white transition-transform active:scale-95"
                                 >
                                     <PlusCircle className="h-6 w-6" />

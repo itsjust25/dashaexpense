@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Trash2, Plus, Save, X, Circle, AlertTriangle, RefreshCcw, Edit2 } from "lucide-react"
+import { Trash2, Plus, Save, X, Circle, AlertTriangle, RefreshCcw, Edit2, Utensils, Car, GraduationCap, Zap, ShoppingBag, Home, Heart, Coffee, Smartphone, Gift, Briefcase } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const PRESET_COLORS = [
@@ -14,6 +14,20 @@ const PRESET_COLORS = [
     "#22c55e", "#10b981", "#14b8a6", "#06b6d4", "#0ea5e9",
     "#3b82f6", "#6366f1", "#8b5cf6", "#a855f7", "#d946ef",
     "#ec4899", "#f43f5e", "#64748b", "#94a3b8"
+]
+
+const PRESET_ICONS = [
+    { id: "Utensils", icon: Utensils },
+    { id: "Car", icon: Car },
+    { id: "GraduationCap", icon: GraduationCap },
+    { id: "Zap", icon: Zap },
+    { id: "ShoppingBag", icon: ShoppingBag },
+    { id: "Home", icon: Home },
+    { id: "Heart", icon: Heart },
+    { id: "Coffee", icon: Coffee },
+    { id: "Smartphone", icon: Smartphone },
+    { id: "Gift", icon: Gift },
+    { id: "Briefcase", icon: Briefcase },
 ]
 
 export function CategoryManager() {
@@ -25,11 +39,13 @@ export function CategoryManager() {
     const [name, setName] = useState("")
     const [limit, setLimit] = useState("")
     const [color, setColor] = useState(PRESET_COLORS[0])
+    const [icon, setIcon] = useState("Utensils")
 
     const resetForm = () => {
         setName("")
         setLimit("")
         setColor(PRESET_COLORS[0])
+        setIcon("Utensils")
         setIsAdding(false)
         setEditingId(null)
     }
@@ -39,6 +55,7 @@ export function CategoryManager() {
         setName(cat.name)
         setLimit(cat.budgetLimit.toString())
         setColor(cat.color || PRESET_COLORS[0])
+        setIcon(cat.icon || "Utensils")
         setIsAdding(true)
     }
 
@@ -49,15 +66,14 @@ export function CategoryManager() {
         const budgetLimit = parseFloat(limit) || 0
 
         if (editingId) {
-            updateCategory(editingId, { name, budgetLimit, color })
+            updateCategory(editingId, { name, budgetLimit, color, icon })
         } else {
-            addCategory({ name, budgetLimit, color })
+            addCategory({ name, budgetLimit, color, icon })
         }
         resetForm()
     }
 
     const handleDelete = (id: string) => {
-        // Basic check for usage
         const hasUsage = transactions.some(t => t.category === categories.find(c => c.id === id)?.name)
         if (hasUsage) {
             alert("Cannot delete this category because it has existing transactions. Please delete the transactions first.")
@@ -80,123 +96,147 @@ export function CategoryManager() {
     }
 
     return (
-        <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold">Manage Categories</h2>
+        <div className="glass-card rounded-2xl p-6 h-full flex flex-col no-scrollbar">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">Category Settings</h2>
                 {!isAdding && (
-                    <Button onClick={() => setIsAdding(true)}>
-                        <Plus className="mr-2 h-4 w-4" /> Add Category
+                    <Button onClick={() => setIsAdding(true)} size="sm" className="rounded-xl">
+                        <Plus className="mr-1 h-4 w-4" /> Add
                     </Button>
                 )}
             </div>
 
             {isAdding && (
-                <Card className="border-2 border-primary/20">
-                    <CardHeader>
-                        <CardTitle>{editingId ? "Edit Category" : "New Category"}</CardTitle>
+                <Card className="border-2 border-primary/20 mb-6">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-lg">{editingId ? "Edit Category" : "New Category"}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSave} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label>Category Name</Label>
+                                <div className="space-y-1">
+                                    <Label className="text-xs">Category Name</Label>
                                     <Input
                                         value={name}
                                         onChange={e => setName(e.target.value)}
                                         placeholder="e.g. Groceries"
                                         required
+                                        className="h-10 rounded-lg"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label>Monthly Budget Limit</Label>
+                                <div className="space-y-1">
+                                    <Label className="text-xs">Monthly Limit</Label>
                                     <Input
                                         type="number"
                                         value={limit}
                                         onChange={e => setLimit(e.target.value)}
                                         placeholder="0 (No limit)"
+                                        className="h-10 rounded-lg"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label>Color Code</Label>
-                                <div className="flex flex-wrap gap-2">
+                            <div className="space-y-1">
+                                <Label className="text-xs">Icon</Label>
+                                <div className="flex flex-wrap gap-1.5 p-2 bg-muted/30 rounded-xl">
+                                    {PRESET_ICONS.map(item => (
+                                        <button
+                                            key={item.id}
+                                            type="button"
+                                            className={cn(
+                                                "w-9 h-9 rounded-lg flex items-center justify-center transition-all",
+                                                icon === item.id ? "bg-primary text-white scale-105 shadow-md" : "hover:bg-primary/10 text-muted-foreground"
+                                            )}
+                                            onClick={() => setIcon(item.id)}
+                                        >
+                                            <item.icon className="h-4.5 w-4.5" />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <Label className="text-xs">Color</Label>
+                                <div className="flex flex-wrap gap-1.5 pt-1">
                                     {PRESET_COLORS.map(c => (
                                         <button
                                             key={c}
                                             type="button"
                                             className={cn(
-                                                "w-8 h-8 rounded-full border-2 transition-transform hover:scale-110",
-                                                color === c ? "border-primary scale-110" : "border-transparent"
+                                                "w-7 h-7 rounded-full border-2 transition-transform hover:scale-110 flex items-center justify-center",
+                                                color === c ? "border-primary scale-110 shadow-sm" : "border-transparent"
                                             )}
                                             style={{ backgroundColor: c }}
                                             onClick={() => setColor(c)}
-                                        />
+                                        >
+                                            {color === c && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-2 pt-2">
-                                <Button type="button" variant="ghost" onClick={resetForm}>Cancel</Button>
-                                <Button type="submit">{editingId ? "Save Changes" : "Create Category"}</Button>
+                            <div className="flex justify-end gap-2 pt-4 border-t border-border/50">
+                                <Button type="button" variant="ghost" onClick={resetForm} className="rounded-xl h-9 text-xs">Cancel</Button>
+                                <Button type="submit" className="rounded-xl h-9 text-xs shadow-md">
+                                    {editingId ? "Save Changes" : "Create Category"}
+                                </Button>
                             </div>
                         </form>
                     </CardContent>
                 </Card>
             )}
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {categories.map(cat => (
-                    <Card key={cat.id} className="group hover:shadow-md transition-shadow">
-                        <CardContent className="p-4 flex justify-between items-center">
+            <div className="flex-1 overflow-y-auto pr-1 no-scrollbar space-y-3 mb-8">
+                {categories.map(cat => {
+                    const IconComp = PRESET_ICONS.find(i => i.id === cat.icon)?.icon || Utensils
+                    return (
+                        <div key={cat.id} className="glass border flex items-center justify-between p-3 rounded-2xl group hover:border-primary/30 transition-all">
                             <div className="flex items-center gap-3">
                                 <div
-                                    className="w-4 h-4 rounded-full"
+                                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md"
                                     style={{ backgroundColor: cat.color }}
-                                />
+                                >
+                                    <IconComp className="h-5 w-5" />
+                                </div>
                                 <div>
-                                    <div className="font-semibold">{cat.name}</div>
-                                    <div className="text-xs text-muted-foreground">
+                                    <div className="font-bold text-sm">{cat.name}</div>
+                                    <div className="text-[10px] text-muted-foreground">
                                         {cat.budgetLimit > 0 ? `Limit: ₱${cat.budgetLimit.toLocaleString()}` : "No Limit"}
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartEdit(cat)}>
+                            <div className="flex gap-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-primary rounded-lg" onClick={() => handleStartEdit(cat)}>
                                     <Edit2 className="h-4 w-4" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleDelete(cat.id)}>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive rounded-lg" onClick={() => handleDelete(cat.id)}>
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                        </div>
+                    )
+                })}
             </div>
 
-            {/* Danger Zone */}
-            <div className="pt-10 border-t border-destructive/20 mt-10">
-                <div className="glass-card border-destructive/30 rounded-2xl p-6 bg-destructive/5">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-destructive font-bold text-lg">
-                                <AlertTriangle className="h-5 w-5" />
-                                Danger Zone
-                            </div>
-                            <p className="text-sm text-muted-foreground max-w-md">
-                                Resetting the system will permanently delete all your transaction records and restore categories to default settings.
-                                <span className="font-bold underline ml-1">This cannot be undone.</span>
-                            </p>
+            <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-4 mt-auto">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-1.5 text-destructive font-bold text-sm">
+                            <AlertTriangle className="h-4 w-4" />
+                            Danger Zone
                         </div>
-                        <Button
-                            variant="destructive"
-                            className="h-12 px-6 rounded-xl font-bold gap-2 shadow-lg shadow-destructive/20"
-                            onClick={handleReset}
-                        >
-                            <RefreshCcw className="h-4 w-4" />
-                            Reset System
-                        </Button>
+                        <p className="text-[10px] text-muted-foreground">
+                            Delete all data and restore defaults.
+                        </p>
                     </div>
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        className="rounded-xl font-bold gap-1 shadow-sm h-9 text-xs"
+                        onClick={handleReset}
+                    >
+                        <RefreshCcw className="h-3 w-3" /> Reset
+                    </Button>
                 </div>
             </div>
         </div>

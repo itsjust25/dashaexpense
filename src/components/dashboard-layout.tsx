@@ -9,15 +9,20 @@ import { CalendarView } from "./calendar-view"
 import { BudgetProgress } from "./budget-progress"
 import { ReportsView } from "./reports-view"
 import { CategoryManager } from "./category-manager"
+import { WealthChart } from "./wealth-chart"
+import { Button } from "./ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { SpendingTrend } from "./spending-trend"
 import { cn } from "@/lib/utils"
 
 export function DashboardLayout() {
     const [activeView, setActiveView] = useState("dashboard")
+    const [isQuickAddOpen, setIsQuickAddOpen] = useState(false)
 
     return (
         <div className="flex h-screen w-full overflow-hidden bg-background font-sans text-foreground md:pl-0">
-            <AppSidebar activeView={activeView} setActiveView={setActiveView} />
+            <AppSidebar activeView={activeView} setActiveView={setActiveView} onQuickAdd={() => setIsQuickAddOpen(true)} />
 
             <main className="flex-1 flex flex-col h-full relative w-full">
                 {/* Mobile Header - Glassmorphic */}
@@ -52,36 +57,59 @@ export function DashboardLayout() {
 
                         {activeView === "dashboard" && (
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10">
-                                {/* LEFT COLUMN */}
-                                <div className="lg:col-span-8 flex flex-col gap-8">
-                                    {/* Summary Cards with Hover Effects */}
-                                    <div className="transform transition-all hover:scale-[1.01] duration-300">
-                                        <BudgetSummary />
+                                {/* Financial Overview Section */}
+                                <div className="lg:col-span-8 space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-6">
+                                            <BudgetSummary />
+                                            <Card className="glass-card border-none shadow-xl overflow-hidden group">
+                                                <CardHeader className="pb-2">
+                                                    <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                                        Last 7 Days Spending
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <SpendingTrend />
+                                                </CardContent>
+                                            </Card>
+                                        </div>
+                                        <div className="space-y-6">
+                                            <Card className="glass-card border-none shadow-xl">
+                                                <CardHeader>
+                                                    <CardTitle className="text-sm font-bold">Category Distribution</CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <WealthChart />
+                                                </CardContent>
+                                            </Card>
+                                        </div>
                                     </div>
 
-                                    {/* Transactions */}
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex justify-between items-center px-1">
-                                            <h3 className="text-lg font-bold">Recent Activity</h3>
-                                            <button className="text-xs text-primary font-medium hover:underline">View All</button>
-                                        </div>
-                                        <div className="glass-card rounded-2xl p-1 overflow-hidden">
+                                    <Card className="glass-card border-none shadow-xl">
+                                        <CardHeader className="flex flex-row items-center justify-between">
+                                            <CardTitle className="text-lg font-bold">Recent Activity</CardTitle>
+                                            <Button variant="ghost" size="sm" className="text-xs font-bold text-primary" onClick={() => setActiveView("calendar")}>
+                                                View All
+                                            </Button>
+                                        </CardHeader>
+                                        <CardContent>
                                             <TransactionList />
-                                        </div>
-                                    </div>
+                                        </CardContent>
+                                    </Card>
                                 </div>
 
-                                {/* RIGHT COLUMN */}
-                                <div className="lg:col-span-4 flex flex-col gap-8">
-                                    <div className="glass-card rounded-2xl p-6 space-y-4">
-                                        <h3 className="font-bold text-lg">Quick Add</h3>
-                                        <AddTransactionForm />
-                                    </div>
-
-                                    <div className="glass-card rounded-2xl p-6 space-y-4">
-                                        <h3 className="font-bold text-lg">Budgets</h3>
-                                        <BudgetProgress />
-                                    </div>
+                                {/* Sidebar Section */}
+                                <div className="lg:col-span-4 space-y-6">
+                                    <Card className="glass-card border-none shadow-xl sticky top-8">
+                                        <CardHeader>
+                                            <CardTitle className="text-lg font-bold">Budgets</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <BudgetProgress />
+                                        </CardContent>
+                                    </Card>
+                                    {/* Quick Add is now a dialog, removed from here */}
                                 </div>
                             </div>
                         )}
@@ -106,6 +134,15 @@ export function DashboardLayout() {
                     </div>
                 </div>
             </main>
+
+            <Dialog open={isQuickAddOpen} onOpenChange={setIsQuickAddOpen}>
+                <DialogContent className="sm:max-w-[425px] rounded-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Quick Add Transaction</DialogTitle>
+                    </DialogHeader>
+                    <AddTransactionForm onSuccess={() => setIsQuickAddOpen(false)} />
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Plus, Minus, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-export function AddTransactionForm() {
+export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
     const { addTransaction, categories, addCategory } = useBudget()
     const [type, setType] = useState<"expense" | "income">("expense")
     const [amount, setAmount] = useState("")
@@ -30,6 +30,7 @@ export function AddTransactionForm() {
         })
         setAmount("")
         setNote("")
+        if (onSuccess) onSuccess()
     }
 
     const handleAddCategory = () => {

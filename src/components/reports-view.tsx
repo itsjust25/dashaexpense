@@ -43,7 +43,7 @@ export function ReportsView() {
     }, [transactions, currentYear])
 
     return (
-        <div className="space-y-6 animate-in fade-in">
+        <div className="space-y-6 animate-in fade-in pb-20 md:pb-0">
             {/* Header Controls */}
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Analytics & Reports</h2>
