@@ -63,19 +63,19 @@ export function ReportsView() {
                 <Card>
                     <CardContent className="pt-6">
                         <div className="text-sm text-muted-foreground">Total Income ({currentYear})</div>
-                        <div className="text-2xl font-bold text-green-600">+₱{yearSummary.income.toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-green-600 dark:text-green-500">+₱{yearSummary.income.toLocaleString()}</div>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="pt-6">
                         <div className="text-sm text-muted-foreground">Total Expenses ({currentYear})</div>
-                        <div className="text-2xl font-bold text-red-600">-₱{yearSummary.expense.toLocaleString()}</div>
+                        <div className="text-2xl font-bold text-red-600 dark:text-red-500">-₱{yearSummary.expense.toLocaleString()}</div>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="pt-6">
                         <div className="text-sm text-muted-foreground">Net Savings ({currentYear})</div>
-                        <div className={cn("text-2xl font-bold", yearSummary.net >= 0 ? "text-primary" : "text-destructive")}>
+                        <div className={cn("text-2xl font-bold", yearSummary.net >= 0 ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500")}>
                             {yearSummary.net >= 0 ? "+" : ""}₱{yearSummary.net.toLocaleString()}
                         </div>
                     </CardContent>
@@ -100,6 +100,13 @@ export function ReportsView() {
                                     tickFormatter={(value) => `₱${value}`}
                                 />
                                 <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: 'hsl(var(--card))',
+                                        border: '1px solid hsl(var(--border))',
+                                        borderRadius: '8px',
+                                        color: 'hsl(var(--foreground))'
+                                    }}
+                                    labelStyle={{ color: 'hsl(var(--foreground))' }}
                                     // @ts-ignore
                                     formatter={(value: number) => `₱${value.toLocaleString()}`}
                                     cursor={{ fill: 'transparent' }}
@@ -138,6 +145,13 @@ export function ReportsView() {
                                     tickFormatter={(value) => `₱${value}`}
                                 />
                                 <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: 'hsl(var(--card))',
+                                        border: '1px solid hsl(var(--border))',
+                                        borderRadius: '8px',
+                                        color: 'hsl(var(--foreground))'
+                                    }}
+                                    labelStyle={{ color: 'hsl(var(--foreground))' }}
                                     // @ts-ignore
                                     formatter={(value: number) => `₱${value.toLocaleString()}`}
                                 />

@@ -78,7 +78,7 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         required
-                        className="pl-10 h-14 text-2xl font-bold rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 transition-all focus-visible:bg-white"
+                        className="pl-10 h-14 text-2xl font-bold rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 transition-all focus-visible:bg-background"
                     />
                 </div>
 
@@ -124,7 +124,7 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                     placeholder={type === "income" ? "Source (e.g. Salary)" : "Note (e.g. Lunch)"}
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-white transition-all"
+                    className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-background transition-all"
                 />
             </div>
 
