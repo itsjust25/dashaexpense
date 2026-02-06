@@ -100,6 +100,7 @@ export function ReportsView() {
                                     tickFormatter={(value) => `₱${value}`}
                                 />
                                 <Tooltip
+                                    // @ts-ignore
                                     formatter={(value: number) => `₱${value.toLocaleString()}`}
                                     cursor={{ fill: 'transparent' }}
                                 />
@@ -136,7 +137,10 @@ export function ReportsView() {
                                     axisLine={false}
                                     tickFormatter={(value) => `₱${value}`}
                                 />
-                                <Tooltip formatter={(value: number) => `₱${value.toLocaleString()}`} />
+                                <Tooltip
+                                    // @ts-ignore
+                                    formatter={(value: number) => `₱${value.toLocaleString()}`}
+                                />
                                 <Line
                                     type="monotone"
                                     dataKey="net"

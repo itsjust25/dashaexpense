@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 // I'll stick to conditional classes manually to avoid missing dependency error.
 // OR I can quickly install it. It's safe to stick to clsx/tailwind-merge.
 
-const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'default' | 'outline' | 'ghost' | 'destructive', size?: 'sm' | 'default' | 'icon' }>(
+const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'default' | 'outline' | 'ghost' | 'destructive' | 'secondary', size?: 'sm' | 'default' | 'icon' }>(
     ({ className, variant = 'default', size = 'default', ...props }, ref) => {
 
         const variants = {
@@ -17,6 +17,7 @@ const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HT
             destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
             outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
             ghost: "hover:bg-accent hover:text-accent-foreground",
+            secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         }
 
         const sizes = {

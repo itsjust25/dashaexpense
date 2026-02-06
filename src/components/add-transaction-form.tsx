@@ -5,7 +5,7 @@ import { useBudget } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, ArrowDownCircle, ArrowUpCircle } from "lucide-react"
+import { Plus, Minus, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function AddTransactionForm() {
@@ -28,20 +28,13 @@ export function AddTransactionForm() {
             note: note || (type === "income" ? "Salary/Deposit" : ""),
             date: new Date().toISOString(),
         })
-
-        // Reset
         setAmount("")
         setNote("")
     }
 
     const handleAddCategory = () => {
         if (newCategoryName.trim()) {
-            // Default color and limit for quick add
-            addCategory({
-                name: newCategoryName.trim(),
-                budgetLimit: 0,
-                color: "#a855f7"
-            })
+            addCategory({ name: newCategoryName.trim(), budgetLimit: 0, color: "#a855f7" })
             setCategory(newCategoryName.trim())
             setNewCategoryName("")
             setIsAddingCategory(false)
@@ -49,89 +42,101 @@ export function AddTransactionForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex gap-2 mb-4">
-                <Button
+        <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Custom Toggle Switch */}
+            <div className="flex bg-muted p-1 rounded-xl">
+                <button
                     type="button"
-                    variant={type === "expense" ? "default" : "outline"}
-                    className={cn("flex-1", type === "expense" && "bg-red-500 hover:bg-red-600")}
+                    className={cn(
+                        "flex-1 py-3 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2",
+                        type === "expense" ? "bg-white text-destructive shadow-md" : "text-muted-foreground hover:bg-white/50"
+                    )}
                     onClick={() => setType("expense")}
                 >
-                    <ArrowDownCircle className="mr-2 h-4 w-4" /> Expense
-                </Button>
-                <Button
+                    <Minus className="h-4 w-4" /> Expense
+                </button>
+                <button
                     type="button"
-                    variant={type === "income" ? "default" : "outline"}
-                    className={cn("flex-1", type === "income" && "bg-green-500 hover:bg-green-600")}
+                    className={cn(
+                        "flex-1 py-3 rounded-lg text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2",
+                        type === "income" ? "bg-white text-green-600 shadow-md" : "text-muted-foreground hover:bg-white/50"
+                    )}
                     onClick={() => setType("income")}
                 >
-                    <ArrowUpCircle className="mr-2 h-4 w-4" /> Income
-                </Button>
+                    <Plus className="h-4 w-4" /> Income
+                </button>
             </div>
 
-            <div className="grid gap-2">
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                    id="amount"
-                    type="number"
-                    step="0.01"
-                    placeholder="0.00"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    required
-                    className="text-lg font-semibold"
-                />
-            </div>
-
-            {type === "expense" && (
-                <div className="grid gap-2">
-                    <div className="flex items-center justify-between">
-                        <Label htmlFor="category">Category</Label>
-                        <Button type="button" variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setIsAddingCategory(!isAddingCategory)}>
-                            {isAddingCategory ? "Cancel" : "+ New Category"}
-                        </Button>
-                    </div>
-
-                    {isAddingCategory ? (
-                        <div className="flex gap-2">
-                            <Input
-                                value={newCategoryName}
-                                onChange={(e) => setNewCategoryName(e.target.value)}
-                                placeholder="New Category Name"
-                            />
-                            <Button type="button" onClick={handleAddCategory} size="sm">Add</Button>
-                        </div>
-                    ) : (
-                        <div className="relative">
-                            <select
-                                id="category"
-                                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                            >
-                                {categories.map((c) => (
-                                    <option key={c.id} value={c.name}>
-                                        {c.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+            <div className="space-y-4">
+                <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">₱</span>
+                    <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="0.00"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        required
+                        className="pl-10 h-14 text-2xl font-bold rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 transition-all focus-visible:bg-white"
+                    />
                 </div>
-            )}
 
-            <div className="grid gap-2">
-                <Label htmlFor="note">Note (Optional)</Label>
+                {type === "expense" && (
+                    <div className="space-y-2">
+                        {isAddingCategory ? (
+                            <div className="flex gap-2">
+                                <Input
+                                    value={newCategoryName}
+                                    onChange={(e) => setNewCategoryName(e.target.value)}
+                                    placeholder="New Category Name"
+                                    className="h-12 rounded-xl bg-muted/50 border-none"
+                                />
+                                <Button type="button" onClick={handleAddCategory} size="icon" className="h-12 w-12 rounded-xl">
+                                    <Check className="h-5 w-5" />
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="relative">
+                                <select
+                                    className="flex h-12 w-full items-center justify-between rounded-xl bg-muted/50 px-4 py-2 text-sm font-medium border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                >
+                                    {categories.map((c) => (
+                                        <option key={c.id} value={c.name}>{c.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+                                    ▼
+                                </div>
+                            </div>
+                        )}
+                        {!isAddingCategory && (
+                            <button type="button" onClick={() => setIsAddingCategory(true)} className="text-xs text-primary font-medium hover:underline px-1">
+                                + Create new category
+                            </button>
+                        )}
+                    </div>
+                )}
+
                 <Input
-                    id="note"
-                    placeholder={type === "income" ? "e.g. Salary, Gift" : "e.g. Lunch, Taxi"}
+                    placeholder={type === "income" ? "Source (e.g. Salary)" : "Note (e.g. Lunch)"}
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
+                    className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-white transition-all"
                 />
             </div>
 
-            <Button type="submit" className={cn("w-full", type === "income" ? "bg-green-600 hover:bg-green-700" : "bg-primary hover:bg-primary/90")}>
-                <Plus className="mr-2 h-4 w-4" /> Add {type === "income" ? "Income" : "Expense"}
+            <Button
+                type="submit"
+                className={cn(
+                    "w-full h-14 rounded-xl text-lg font-bold shadow-lg shadow-primary/20 transition-transform active:scale-95",
+                    type === "income"
+                        ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:to-emerald-700"
+                        : "bg-gradient-to-r from-primary to-purple-700 hover:to-purple-800"
+                )}
+            >
+                <Check className="mr-2 h-5 w-5" /> Save Transaction
             </Button>
         </form>
     )
