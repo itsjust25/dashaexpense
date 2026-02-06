@@ -95,8 +95,7 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                             onChange={(e) => setDate(e.target.value)}
                             max={new Date().toISOString().split('T')[0]}
                             required
-                            className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-background transition-all [color-scheme:dark]"
-                            style={{ colorScheme: 'dark' }}
+                            className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-background transition-all dark:[color-scheme:dark]"
                         />
                     </div>
                 </div>
