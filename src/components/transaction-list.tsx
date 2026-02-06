@@ -94,8 +94,16 @@ export function TransactionList() {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-8 w-8 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 rounded-lg transition-all"
-                                            onClick={() => removeTransaction(tx.id)}
+                                            className="h-9 w-9 md:h-8 md:w-8 text-muted-foreground hover:text-destructive md:opacity-0 md:group-hover:opacity-100 rounded-lg transition-all"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                const confirmDelete = window.confirm(
+                                                    `Are you sure you want to delete this transaction?\n\n${tx.category}\n${isIncome ? '+' : '-'}₱${tx.amount.toLocaleString()}${tx.note ? `\n${tx.note}` : ''}`
+                                                )
+                                                if (confirmDelete) {
+                                                    removeTransaction(tx.id)
+                                                }
+                                            }}
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </Button>

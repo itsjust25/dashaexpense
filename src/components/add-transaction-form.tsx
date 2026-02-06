@@ -14,6 +14,7 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
     const [amount, setAmount] = useState("")
     const [category, setCategory] = useState(categories[0]?.name || "Food")
     const [note, setNote] = useState("")
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]) // YYYY-MM-DD format
     const [isAddingCategory, setIsAddingCategory] = useState(false)
     const [newCategoryName, setNewCategoryName] = useState("")
 
@@ -26,10 +27,11 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
             amount: parseFloat(amount),
             category: type === "expense" ? category : "Income Source",
             note: note || (type === "income" ? "Salary/Deposit" : ""),
-            date: new Date().toISOString(),
+            date: new Date(date).toISOString(),
         })
         setAmount("")
         setNote("")
+        setDate(new Date().toISOString().split('T')[0]) // Reset to today
         if (onSuccess) onSuccess()
     }
 
@@ -82,6 +84,23 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                     />
                 </div>
 
+                {/* Date Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="date" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Date</Label>
+                    <div className="relative">
+                        <Input
+                            id="date"
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            max={new Date().toISOString().split('T')[0]}
+                            required
+                            className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-background transition-all [color-scheme:dark]"
+                            style={{ colorScheme: 'dark' }}
+                        />
+                    </div>
+                </div>
+
                 {type === "expense" && (
                     <div className="space-y-2">
                         {isAddingCategory ? (
@@ -99,12 +118,17 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                         ) : (
                             <div className="relative">
                                 <select
-                                    className="flex h-12 w-full items-center justify-between rounded-xl bg-muted/50 px-4 py-2 text-sm font-medium border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none"
+                                    className="flex h-12 w-full items-center justify-between rounded-xl bg-muted/50 px-4 py-2 text-sm font-medium border-none focus:ring-2 focus:ring-primary/20 outline-none appearance-none text-foreground"
+                                    style={{
+                                        backgroundImage: 'none',
+                                        WebkitAppearance: 'none',
+                                        MozAppearance: 'none'
+                                    }}
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                 >
                                     {categories.map((c) => (
-                                        <option key={c.id} value={c.name}>{c.name}</option>
+                                        <option key={c.id} value={c.name} className="bg-background text-foreground">{c.name}</option>
                                     ))}
                                 </select>
                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
