@@ -27,7 +27,7 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
             amount: parseFloat(amount),
             category: type === "expense" ? category : "Income Source",
             note: note || (type === "income" ? "Salary/Deposit" : ""),
-            date: new Date(date).toISOString(),
+            date: new Date(`${date}T${new Date().toTimeString().split(' ')[0]}`).toISOString(),
         })
         setAmount("")
         setNote("")
@@ -93,7 +93,6 @@ export function AddTransactionForm({ onSuccess }: { onSuccess?: () => void }) {
                             type="date"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
-                            max={new Date().toISOString().split('T')[0]}
                             required
                             className="h-12 rounded-xl bg-muted/50 border-none focus-visible:ring-primary/20 focus-visible:bg-background transition-all dark:[color-scheme:dark]"
                         />

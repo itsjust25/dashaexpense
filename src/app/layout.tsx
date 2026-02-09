@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dasha Budget",
+  title: "Dasha's",
   description: "A simple, beautiful budget tracker",
   manifest: "/manifest.json", // in case we add PWA support later
 };

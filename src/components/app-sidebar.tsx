@@ -30,7 +30,7 @@ export function AppSidebar({ className, activeView, setActiveView, onQuickAdd }:
                 <div className="h-full flex flex-col">
                     <div className="p-8 flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gradient-primary text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-primary/20">D</div>
-                        <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">Dasha Budget</h1>
+                        <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">Dasha's</h1>
                     </div>
 
                     <div className="flex-1 px-4 py-2 space-y-2">

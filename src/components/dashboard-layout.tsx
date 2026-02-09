@@ -37,7 +37,7 @@ export function DashboardLayout() {
                 <header className="glass fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between md:hidden px-4">
                     <div className="w-10" /> {/* Spacer */}
                     <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-800">
-                        {activeView === "dashboard" && "Dasha Budget"}
+                        {activeView === "dashboard" && "Dasha's"}
                         {activeView === "calendar" && "Calendar"}
                         {activeView === "reports" && "Reports"}
                         {activeView === "categories" && "Settings"}
@@ -49,7 +49,7 @@ export function DashboardLayout() {
                 <header className="hidden md:flex flex-none h-20 items-center justify-between px-8 border-b bg-card/30 backdrop-blur-sm z-50">
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight">
-                            {activeView === "dashboard" && "Dasha Budget"}
+                            {activeView === "dashboard" && "Dasha's"}
                             {activeView === "calendar" && "Calendar"}
                             {activeView === "reports" && "Analytics"}
                             {activeView === "categories" && "Categories"}
@@ -69,68 +69,72 @@ export function DashboardLayout() {
                     <div className="max-w-7xl mx-auto h-full space-y-6">
 
                         {activeView === "dashboard" && (
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-10">
-                                {/* Financial Overview Section */}
-                                <div className="lg:col-span-8 space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="space-y-6">
-                                            <BudgetSummary />
-                                            <Card className="glass-card border-none shadow-xl overflow-hidden group">
-                                                <CardHeader className="pb-2">
-                                                    <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                                        Last 7 Days Spending
-                                                    </CardTitle>
-                                                </CardHeader>
-                                                <CardContent>
-                                                    <SpendingTrend />
-                                                </CardContent>
-                                            </Card>
-                                        </div>
-                                        <div className="space-y-6">
-                                            <Card className="glass-card border-none shadow-xl">
-                                                <CardHeader>
-                                                    <CardTitle className="text-sm font-bold">Category Distribution</CardTitle>
-                                                </CardHeader>
-                                                <CardContent>
-                                                    <WealthChart />
-                                                </CardContent>
-                                            </Card>
-                                        </div>
+                            <div className="space-y-8 pb-20">
+                                {/* Top Section: Balance Cards */}
+                                <BudgetSummary />
+
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                                    {/* Left Column: Primary Actions & History (8 cols) */}
+                                    <div className="lg:col-span-8 space-y-8">
+                                        {/* 1. Quick Add */}
+                                        <Card className="glass-card border-none shadow-xl overflow-hidden">
+                                            <CardHeader>
+                                                <CardTitle className="text-lg font-bold">Quick Add</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <AddTransactionForm />
+                                            </CardContent>
+                                        </Card>
+
+                                        {/* 2. Recent Activity */}
+                                        <Card className="glass-card border-none shadow-xl">
+                                            <CardHeader className="flex flex-row items-center justify-between">
+                                                <CardTitle className="text-lg font-bold">Recent Activity</CardTitle>
+                                                <Button variant="ghost" size="sm" className="text-xs font-bold text-primary" onClick={() => setActiveView("calendar")}>
+                                                    View All
+                                                </Button>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <TransactionList />
+                                            </CardContent>
+                                        </Card>
                                     </div>
 
-                                    <Card className="glass-card border-none shadow-xl">
-                                        <CardHeader className="flex flex-row items-center justify-between">
-                                            <CardTitle className="text-lg font-bold">Recent Activity</CardTitle>
-                                            <Button variant="ghost" size="sm" className="text-xs font-bold text-primary" onClick={() => setActiveView("calendar")}>
-                                                View All
-                                            </Button>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <TransactionList />
-                                        </CardContent>
-                                    </Card>
-                                </div>
+                                    {/* Right Column: Analytics & Budgets (4 cols) */}
+                                    <div className="lg:col-span-4 space-y-8">
+                                        {/* 3. 7 Days Spending */}
+                                        <Card className="glass-card border-none shadow-xl overflow-hidden group">
+                                            <CardHeader className="pb-2">
+                                                <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                    Last 7 Days Spending
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <SpendingTrend />
+                                            </CardContent>
+                                        </Card>
 
-                                {/* Sidebar Section */}
-                                <div className="lg:col-span-4 space-y-6">
-                                    <Card className="glass-card border-none shadow-xl sticky top-8">
-                                        <CardHeader>
-                                            <CardTitle className="text-lg font-bold">Quick Add</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <AddTransactionForm />
-                                        </CardContent>
-                                    </Card>
-                                    <Card className="glass-card border-none shadow-xl">
-                                        <CardHeader>
-                                            <CardTitle className="text-lg font-bold">Budgets</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <BudgetProgress />
-                                        </CardContent>
-                                    </Card>
-                                    {/* Quick Add is now a dialog, removed from here */}
+                                        {/* 4. Category Distribution */}
+                                        <Card className="glass-card border-none shadow-xl">
+                                            <CardHeader>
+                                                <CardTitle className="text-sm font-bold">Category Distribution</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <WealthChart />
+                                            </CardContent>
+                                        </Card>
+
+                                        {/* 5. Budgets */}
+                                        <Card className="glass-card border-none shadow-xl">
+                                            <CardHeader>
+                                                <CardTitle className="text-lg font-bold">Budgets</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <BudgetProgress />
+                                            </CardContent>
+                                        </Card>
+                                    </div>
                                 </div>
                             </div>
                         )}
